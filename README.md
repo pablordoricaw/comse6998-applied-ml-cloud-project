@@ -18,5 +18,5 @@
 
 **TAs:**
 
-- Abhilash Ganga (UNI: ag4797)
-- Rishita Yadav (UNI: ry2501)
+- Abhilash Ganga
+- Rishita Yadav
