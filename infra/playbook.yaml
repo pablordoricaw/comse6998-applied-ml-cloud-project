@@ -1,0 +1,19 @@
+- name: Install uv
+  hosts: env
+  tasks:
+    - name: Install uv
+      ansible.builtin.shell:
+        cmd: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+- name: Enable NVIDIA GPU Performance Counters
+  hosts: env
+  become: true
+  tasks:
+    - name: Set Perf Counters Config
+      ansible.builtin.shell:
+        cmd: |
+          echo "options nvidia NVreg_RestrictProfilingToAdminUsers=0" > /etc/modprobe.d/ncu-gpu-perf-counters.conf
+        creates: /etc/modprobe.d/ncu-gpu-perf-counters.conf
+    - name: Print Reboot Reminder Message
+      ansible.builtin.debug:
+        msg: Reboot the managed node to finish the NVIDIA GPU performance counters setup
