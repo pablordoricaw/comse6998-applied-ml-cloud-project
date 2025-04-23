@@ -20,3 +20,27 @@
 
 - Abhilash Ganga
 - Rishita Yadav
+
+## Requirements
+
+This section outlines what you need to do on your local machine for this project.
+
+### `gcloud` - Google Cloud CLI tool
+
+1. Install the [gcloud](https://cloud.google.com/sdk/docs/install) CLI tool.
+2. (Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your **user credentials**.
+3. Set GCP project as the quota billing project with the following command:
+
+    ```bash
+    gcloud auth application-default set-quota-project
+    ```
+
+### `uv` - Python Dependency & Virtual Environment Manager
+
+1. Install [uv](https://docs.astral.sh/uv/#installation) (and now you can uninstall `conda`, `pyenv`, and all the rest and just use `uv` 🙂)
+2. In the root directory of the project, where the `pyproject.toml` file exists, create the Python virtual environment and install the dependencies:
+
+    ```bash
+    uv sync --all-groups
+    ```
+
