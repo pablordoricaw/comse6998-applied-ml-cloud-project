@@ -3,6 +3,13 @@ from dataclasses import dataclass
 import pulumi
 import pulumi_gcp as gcp
 
+TEAM_MEMBERS = [
+    "po2311@columbia.edu",
+    "asg2278@columbia.edu",
+    "tyc2118@columbia.edu",
+    "tc3407@columbia.edu",
+]
+
 
 @dataclass
 class InstanceArgs:
@@ -110,6 +117,16 @@ if __name__ == "__main__":
             zone=config["gcp"]["zone"],
         ),
     )
+
+    for gcp_user in ["user:" + member for member in TEAM_MEMBERS]:
+        gpu_vm_iam_member = gcp.compute.InstanceIAMMember(
+            f"gpu-vm-iam-ssh-admin-{gcp_user.split(':')[-1]}",
+            project=config["gcp"]["project"],
+            zone=config["gcp"]["zone"],
+            instance_name=gpu_vm.instance.id,
+            role="roles/compute.instanceAdmin.v1",
+            member=gcp_user,
+        )
 
     artifact_repo = gcp.artifactregistry.Repository(
         "ar-cntrs-repo",
