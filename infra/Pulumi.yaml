@@ -1,0 +1,11 @@
+name: applied-ml-cloud-project-iac
+description: Applied ML in the Cloud Project GCP IaC with Pulumi Python
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../.venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: gcp-python

@@ -1,0 +1,9 @@
+encryptionsalt: v1:2P+KmcogOh4=:v1:Y7qQYcr+eLk10AkA:N43o1iNGIoJc93OMJmhcHaaKBQIXWA==
+config:
+  gcp:project: applied-ml-cloud-project
+  gcp:region: us-east1
+  gcp:zone: c
+  gpu-vm:gpu-count: "1"
+  gpu-vm:gpu-type: nvidia-l4
+  gpu-vm:machine-type: g2-standard-4
+  gpu-vm:machine-number: "01"
