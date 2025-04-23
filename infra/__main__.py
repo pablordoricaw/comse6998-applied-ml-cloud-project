@@ -110,3 +110,35 @@ if __name__ == "__main__":
             zone=config["gcp"]["zone"],
         ),
     )
+
+    artifact_repo = gcp.artifactregistry.Repository(
+        "ar-cntrs-repo",
+        location=config["gcp"]["region"],
+        repository_id="ar-cntrs-repo",
+        description="Artifact repository for Docker images",
+        format="DOCKER",
+        docker_config={
+            "immutable_tags": False,
+        },
+    )
+
+    model_repo_bkt = gcp.storage.Bucket(
+        "gcs-bkt-model-repository",
+        name="gcs-bkt-model-repository",
+        location=config["gcp"]["region"],
+        storage_class="STANDARD",
+        autoclass=gcp.storage.BucketAutoclassArgs(enabled=False),
+        versioning=gcp.storage.BucketVersioningArgs(enabled=False),
+        force_destroy=True,
+        soft_delete_policy=gcp.storage.BucketSoftDeletePolicyArgs(
+            # Disable the soft delete policy on the bucket to allow immediately to delete objects.
+            # https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/#bucketsoftdeletepolicy
+            retention_duration_seconds=0
+        ),
+        default_event_based_hold=False,
+        enable_object_retention=False,
+        uniform_bucket_level_access=True,
+        hierarchical_namespace=gcp.storage.BucketHierarchicalNamespaceArgs(
+            enabled=True
+        ),
+    )
