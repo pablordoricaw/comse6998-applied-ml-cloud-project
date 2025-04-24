@@ -12,7 +12,7 @@ for i in range(4):
     pred, prob = predict(img_path, resnet50_model)
     print('{} - Predicted: {}, Probablility: {}'.format(img_path, pred, prob))
 
-    plt.subplot(2,2,i+1)
-    plt.imshow(img);
-    plt.axis('off');
-    plt.title(pred[1])
+#     plt.subplot(2,2,i+1)
+#     plt.imshow(img);
+#     plt.axis('off');
+#     plt.title(pred[1])
