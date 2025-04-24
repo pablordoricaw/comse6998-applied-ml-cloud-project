@@ -66,7 +66,11 @@ The intention of this module is to simplify recreating the project if needed, an
 1. Create a project in GCP, *manually*.
 2. Select the project as the `gcloud` project and quota-billing-project
 3. Run the the `state_backend.py` Python module.
-4. Deploy the IaC and CaC.
+4. [Set the bucket as the Pulumi backend](https://www.pulumi.com/docs/iac/concepts/state-and-backends/#google-cloud-storage) with the command:
+    ```bash
+    uv run pulumi login gs://<state-bucket>
+    ```
+4. Deploy the IaC and CaC with the instructions in this README.
 
 > Why create the project in GCP manually and not as part of the Python module using the SDK? The Python module uses the `gcloud` auth config. If you don't have an existing project set as your quota-billing-project for your API calls, the API calls to create the project in the Python code will error out.
 
