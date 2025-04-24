@@ -2,9 +2,10 @@
   hosts: env
   tasks:
     - name: Install uv
+      become: true
       ansible.builtin.shell:
         cmd: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
+          curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin/" sh
 - name: Enable NVIDIA GPU Performance Counters
   hosts: env
   become: true
