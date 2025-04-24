@@ -29,10 +29,15 @@ This section outlines what you need to do on your local machine for this project
 
 1. Install the [gcloud](https://cloud.google.com/sdk/docs/install) CLI tool.
 2. [Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your **user credentials**.
+5. (Once) Set project with command
+    ```bash
+    gcloud config set project <PROJECT_ID>
+    ```
 3. Set GCP project as the quota billing project with the following command:
 
     ```bash
-    gcloud auth application-default set-quota-project
+    gcloud auth application-default login
+    gcloud auth application-default set-quota-project <PROJECT_ID>
     ```
 
 ### `uv` - Python Dependency & Virtual Environment Manager
