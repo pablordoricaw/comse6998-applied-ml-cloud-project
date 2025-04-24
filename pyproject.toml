@@ -13,3 +13,10 @@ infra = [
     "pulumi>=3.163.0",
     "pulumi-gcp>=8.27.0",
 ]
+models = [
+    "numpy>=2.2.5",
+    "pillow>=11.2.1",
+    "tensorrt>=10.9.0.34",
+    "torch>=2.7.0",
+    "torchvision>=0.22.0",
+]
