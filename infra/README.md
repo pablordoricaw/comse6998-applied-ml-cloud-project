@@ -40,7 +40,6 @@ The code in this directory is the infrastructure-as-code (IaC) and configuration
 >
 > **These decisions allow us to deploy changes faster, but require letting the rest of the team know when new changes will be deployed and shortly after committing the IaC changes deployed.**
 
-
 ### How to Preview Changes
 
 ```bash
@@ -52,6 +51,13 @@ uv run pulumi preview
 ```bash
 uv run pulumi up
 ```
+
+### IaC Backend
+
+We are using a Google Cloud Storage bucket as the backend for the IaC. This is purely to make to make the project as self contained as possible. We've included a Python module `state_backend.py' that creates the Google Cloud Storage bucket and can manage user level permissions to allow infra local deployments.
+
+This Python module uses the Google Cloud Storage Python SDK and uses the authentication configured for `gcloud`.
+
 
 ## CaC
 
