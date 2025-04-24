@@ -42,6 +42,9 @@ This section outlines what you need to do on your local machine for this project
 
 ### `uv` - Python Dependency & Virtual Environment Manager
 
+> [!TIP]
+> After installing `uv`, go through the [HOW_TO_UV](./HOW_TO_UV.md) tutorial to become a 🥷.
+
 1. Install [uv](https://docs.astral.sh/uv/#installation) (and now you can uninstall `conda`, `pyenv`, and all the rest and just use `uv` 🙂)
 2. In the root directory of the project, where the `pyproject.toml` file exists, create the Python virtual environment and install the dependencies:
 
