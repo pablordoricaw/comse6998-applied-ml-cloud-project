@@ -62,7 +62,8 @@ uv supports logical grouping of dependencies, allowing you to install only what'
   uv add --group test pytest
   ```
 
-- **Resulting `pyproject.toml` Example:**
+## `pyproject.toml` After 1. and 2.:**
+
   ```
   [project]
   dependencies = [
@@ -81,6 +82,12 @@ uv supports logical grouping of dependencies, allowing you to install only what'
   ]
   ```
 
+- **Install All Groups:**
+
+  ```
+  uv sync --all-groups
+  ```
+
 - **Install Only Selected Groups:**
 
   ```
@@ -91,6 +98,13 @@ uv supports logical grouping of dependencies, allowing you to install only what'
   - `--only-group` installs just the specified group(s).
   - `--no-group` excludes the specified group(s).
 
+- **Install Dependencies:**
+
+  ```
+  uv sync
+  ```
+
+  - This command only installs the dependencies not in a particular group. For our example that would be the `requests` library.
 
 ## **3. Running Python Code Without Explicitly Activating the venv**
 
@@ -98,7 +112,7 @@ uv allows you to run Python scripts directly, handling environment activation an
 
 - **Run a Script:**
   ```
-  uv run  my_module.py
+  uv run my_module.py
   ```
 
   This command will:
