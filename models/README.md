@@ -1,0 +1,27 @@
+# Models
+
+## How to (develop and) optimize models?
+
+The following diagram shows the steps and the cloud services on which the steps run.
+
+The main workload is executed on the GPU VM since some of the optimizations done by TensorRT such as kernel fusion are specific for the GPU of the machine.
+
+1. SSH into the GPU VM throght Google Cloud console or with `gcloud compute ssh`
+    ```bash
+    gcloud compute ssh gpu-vm-name --project=<project-id> --zone=<gpu-vm-zone> --ssh-flag="-A"
+    ```
+
+    The `ssh-flag="-A"` forwards your SSH agent. Assuming you have SSH keys setup with your GitHub account, this flag allows to clone the repo in the next step with SSH.
+2. (Once) Configure your Git username and email in the GPU VM
+    ```bash
+    git config --global user.name "Your Name"
+    git config --global user.email "your_github_account_email@example.com"
+    ```
+3. (Once) Clone this repo into the GPU-VM.
+4. Write Python modules in this `models/` directory to get pre-trained models in your favorite neural network library (e.g. PyTorch, TensorFlow).
+5. Optimize the model with TensorRT.
+6. Store the optimized TensorRT model called the TensorRT engine in the Triton model repository following Triton's required directory structure.
+
+> [!IMPORTANT]
+> To optimize or run code that uses the GPU, coordinate with the rest of the team to avoid issues since the GPU VM is shared.
+
