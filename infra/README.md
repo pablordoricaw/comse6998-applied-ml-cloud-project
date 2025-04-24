@@ -1,9 +1,14 @@
 # Infra & Config
 
-The code in this directory is the infrastructure-as-code (IaC) and configuration-as-code (CaC) for the project.
+The code in this directory is the project's infrastructure-as-code (IaC) and configuration-as-code (CaC).
 
 - IaC is done with Pulumi IaC through its Python SDK with a Google Cloud Storage bucket for the backend.
 - CaC is done with Ansible.
+
+The following diagram shows all the infrastructure used for the project.
+
+![image](https://github.com/user-attachments/assets/2fce2ce6-1e7f-4154-8f83-d90e2dba8fb0)
+
 
 ## Requirements
 
@@ -12,7 +17,7 @@ This section outlines what you need to do on your local machine to be able to ma
 ### `gcloud` - Google Cloud CLI tool
 
 1. Install the [gcloud](https://cloud.google.com/sdk/docs/install) CLI tool.
-2. (Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your user credentials.
+2. [Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your user credentials.
 3. Set GCP project as the quota billing project with the following command:
 
     ```bash
@@ -56,28 +61,28 @@ uv run pulumi up
 
 ### IaC Backend
 
-We are using a Google Cloud Storage bucket as the backend for the IaC. This is purely to make to make the project as self contained as possible. 
+We use a Google Cloud Storage bucket as the backend for the IaC. This is purely to make the project as self-contained as possible. 
 
-We've included a Python module `state_backend.py` that creates the Google Cloud Storage bucket and can manage user level permissions to allow infra local deployments. This Python module uses the Google Cloud Storage Python SDK and uses the authentication configured for `gcloud`.
+We've included a Python module, state_backend.py, that creates the Google Cloud Storage bucket and can manage user-level permissions to allow infra local deployments. This module uses the Google Cloud Storage Python SDK and the authentication configured for `gcloud`.
 
-The intention of this module is to simplify recreating the project if needed, and avoid "secret" steps. With that said, to recreate the infra for the project the steps to follow are:
+This module intends to simplify recreating the project, if needed, and avoid "secret" steps. With that said, to recreate the infra for the project, the steps to follow are:
 
 0. Have installed the [requirements](#requirements) and have this repo cloned on your local machine.
 1. Create a project in GCP, *manually*.
 2. Select the project as the `gcloud` project and quota-billing-project
-3. Run the the `state_backend.py` Python module.
+3. Run the `state_backend.py` Python module.
 4. [Set the bucket as the Pulumi backend](https://www.pulumi.com/docs/iac/concepts/state-and-backends/#google-cloud-storage) with the command:
     ```bash
     uv run pulumi login gs://<state-bucket>
     ```
 4. Deploy the IaC and CaC with the instructions in this README.
 
-> Why create the project in GCP manually and not as part of the Python module using the SDK? The Python module uses the `gcloud` auth config. If you don't have an existing project set as your quota-billing-project for your API calls, the API calls to create the project in the Python code will error out.
+> Why manually create the project in GCP and not as part of the Python module using the SDK? The Python module uses the `gcloud` auth config. If you don't have an existing project set as your quota-billing-project for your API calls, the API calls to create the project in the Python code will error.
 
 ## CaC
 
 > [!NOTE]
-> The config only needs to be applied after a new infra deployment or any new configs added.
+> The config must only be applied after a new infra deployment or after any new configs have been added.
 
 ### Before Applying the Config
 
