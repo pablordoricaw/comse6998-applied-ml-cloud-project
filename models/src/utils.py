@@ -1,8 +1,16 @@
+from PIL import Image
+import json
+import torchvision.transforms as transforms
 import torch
 import numpy as np
 import time
 import torch.backends.cudnn as cudnn
 cudnn.benchmark = True
+
+with open("../data/imagenet_class_index.json", "r") as f:
+    class_idx = json.load(f)
+
+d = {str(k): [int(k), v[1]] for k, v in class_idx.items()}
 
 def rn50_preprocess():
     preprocess = transforms.Compose([

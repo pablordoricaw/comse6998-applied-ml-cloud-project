@@ -4,8 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu126"
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+
+[tool.uv.sources]
+torch-tensorrt = { index = "pytorch" }
 
 [dependency-groups]
 infra = [
@@ -14,9 +27,9 @@ infra = [
     "pulumi-gcp>=8.27.0",
 ]
 models = [
-    "numpy>=2.2.5",
-    "pillow>=11.2.1",
-    "tensorrt>=10.9.0.34",
-    "torch>=2.7.0",
-    "torchvision>=0.22.0",
+    "numpy>=1.26.0",
+    "pillow>=11.0.0",
+    "torch==2.6.0",
+    "torchvision>=0.20.0",
+    "torch-tensorrt"
 ]
