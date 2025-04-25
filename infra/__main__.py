@@ -123,7 +123,6 @@ if __name__ == "__main__":
         gpu_vm_iam_member = gcp.compute.InstanceIAMMember(
             f"gpu-vm-iam-ssh-admin-{gcp_user.split(':')[-1]}",
             project=config["gcp"]["project"],
-            zone=config["gcp"]["zone"],
             instance_name=gpu_vm.instance.id,
             role="roles/compute.instanceAdmin.v1",
             member=gcp_user,
