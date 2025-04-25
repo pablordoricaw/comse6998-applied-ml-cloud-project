@@ -56,6 +56,7 @@ class Instance(pulumi.ComponentResource):
             name=name,
             zone=f"{args.region}-{args.zone}",
             machine_type=args.machine_type,
+            allow_stopping_for_update=True,
             guest_accelerators=[
                 gcp.compute.InstanceGuestAcceleratorArgs(
                     count=args.gpu_count, type=args.gpu_type
