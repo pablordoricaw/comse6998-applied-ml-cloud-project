@@ -1,10 +1,14 @@
-from PIL import Image
+import os
+import random
 import json
 import torchvision.transforms as transforms
 import torch
 import numpy as np
 import time
 import torch.backends.cudnn as cudnn
+from torchvision.datasets import ImageFolder
+from torch.utils.data import Dataloader, SubsetRandomSampler
+from PIL import Image
 cudnn.benchmark = True
 
 with open("../data/imagenet_class_index.json", "r") as f:
@@ -67,3 +71,48 @@ def benchmark(model, input_shape=(1024, 1, 224, 224), dtype='fp32', nwarmup=50, 
     print("Input shape:", input_data.size())
     print("Output features size:", features.size())
     print('Average batch time: %.2f ms'%(np.mean(timings)*1000))
+
+def get_imagenette_dataloader(
+    num_samples: int,
+    imagenette_root: str = "../data/imagenette_calibration/imagenette2",
+    batch_size: int = 8,
+    shuffle: bool = True,
+    num_workers: int = 4,
+) -> DataLoader:
+    """
+    Build a DataLoader over the `imagenette2/val` directory for INT8 calibration.
+    """
+    # 1) Point at the 'val' subfolder
+    val_dir = os.path.join(imagenette_root, "val")
+    if not os.path.isdir(val_dir):
+        raise FileNotFoundError(f"{val_dir} not found – did you extract imagenette2.tgz?")
+
+    # 2) Standard ResNet-50 preprocessing
+    transform = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        # (optional) normalize if your model was trained with these stats:
+        # transforms.Normalize(mean=[0.485, 0.456, 0.406],
+        #                      std=[0.229, 0.224, 0.225]),
+    ])
+
+    # 3) ImageFolder will auto-label, but we only care about the images
+    dataset = ImageFolder(val_dir, transform=transform)
+
+    # 4) Sample exactly `num_samples` out of the full validation set
+    total = len(dataset)
+    num_samples = min(num_samples, total)
+    indices = list(range(total))
+    if shuffle:
+        random.shuffle(indices)
+    indices = indices[:num_samples]
+    sampler = SubsetRandomSampler(indices)
+
+    return DataLoader(
+        dataset,
+        sampler=sampler,
+        batch_size=batch_size,
+        num_workers=num_workers,
+        pin_memory=True,
+    )
