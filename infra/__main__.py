@@ -65,7 +65,7 @@ class Instance(pulumi.ComponentResource):
                 initialize_params=gcp.compute.InstanceBootDiskInitializeParamsArgs(
                     image="projects/ml-images/global/images/c0-deeplearning-common-cu124-v20250325-debian-11",
                     enable_confidential_compute=False,
-                    size=100,  # deep learning images are like 50GBs...
+                    size=300,  # deep learning images are like 50GBs...
                     type="pd-balanced",
                 )
             ),
