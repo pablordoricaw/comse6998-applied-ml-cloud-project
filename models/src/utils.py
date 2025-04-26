@@ -7,11 +7,11 @@ import numpy as np
 import time
 import torch.backends.cudnn as cudnn
 from torchvision.datasets import ImageFolder
-from torch.utils.data import Dataloader, SubsetRandomSampler
+from torch.utils.data import DataLoader, SubsetRandomSampler
 from PIL import Image
 cudnn.benchmark = True
 
-with open("../data/imagenet_class_index.json", "r") as f:
+with open("../data/test_images/imagenet_class_index.json", "r") as f:
     class_idx = json.load(f)
 
 d = {str(k): [int(k), v[1]] for k, v in class_idx.items()}

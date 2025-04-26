@@ -1,11 +1,11 @@
 import torch
 import torchvision
-import torch_tensorrt
-from utils import benchmark
+from utils import benchmark, get_imagenette_dataloader
 
 import modelopt.torch.quantization as mtq
 
-resnet50_model = torch.load("../models/resnet50.pt", weights_only=False)
+device = torch.device("cuda")
+resnet50_model = torch.load("../models/resnet50.pt", weights_only=False).to(device)
 calib_size = 256
 
 # -- build the calibration loader from imagenette2 --
@@ -21,21 +21,15 @@ def forward_loop(model):
 
 # -- run PTQ calibration --
 model_int8 = mtq.quantize(
-    model,
+    resnet50_model,
     mtq.INT8_SMOOTHQUANT_CFG,
     forward_loop
 )
 
-# now `model_int8` is your INT8‐calibrated ResNet-50
-torch.save(model_int8.state_dict(), "resnet50_int8.pt")
+model_int8.eval()
 
-# FP32 compilation
-#trt_model_fp32 = torch_tensorrt.compile(
-#    resnet50_model,
-#    inputs=[torch_tensorrt.Input((128, 3, 224, 224), dtype=torch.float32)],
-#    enabled_precisions={torch.float32},      # use a set for clarity
-#    workspace_size=1 << 22
-#)
+# now `model_int8` is your INT8‐calibrated ResNet-50
+torch.save(model_int8.state_dict(), "../models/resnet50_int8.pt")
 
 # Benchmark
 benchmark(model_int8, input_shape=(128, 3, 224, 224), nruns=100)

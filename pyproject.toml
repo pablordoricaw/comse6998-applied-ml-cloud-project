@@ -31,5 +31,7 @@ models = [
     "pillow>=11.0.0",
     "torch==2.6.0",
     "torchvision>=0.20.0",
-    "torch-tensorrt"
+    "torch-tensorrt",
+    "nvidia-modelopt[all,torch]>=0.27.1",
+    "setuptools>=70.2.0",
 ]

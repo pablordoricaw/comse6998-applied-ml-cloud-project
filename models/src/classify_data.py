@@ -6,7 +6,7 @@ resnet50_model = torch.load("../models/resnet50.pt", weights_only=False)
 resnet50_model.eval()
 
 for i in range(4):
-    img_path = '../data/img%d.JPG'%i
+    img_path = '../data/test_images/img%d.JPG'%i
     img = Image.open(img_path)
 
     pred, prob = predict(img_path, resnet50_model)
