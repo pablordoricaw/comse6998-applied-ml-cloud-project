@@ -5,10 +5,15 @@ import torchvision.transforms as transforms
 import torch
 import numpy as np
 import time
+import onnx
+import pycuda.driver as cuda
+import pycuda.autoinit
+import tensorrt as trt
 import torch.backends.cudnn as cudnn
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, SubsetRandomSampler
 from PIL import Image
+ 
 cudnn.benchmark = True
 
 with open("../data/test_images/imagenet_class_index.json", "r") as f:
@@ -116,3 +121,60 @@ def get_imagenette_dataloader(
         num_workers=num_workers,
         pin_memory=True,
     )
+ 
+def build_engine(onnx_file_path):
+    # logger to capture errors, warnings, and other information during the build and inference phases
+    TRT_LOGGER = trt.Logger()
+
+    # initialize TensorRT engine and parse ONNX model
+    builder = trt.Builder(TRT_LOGGER)
+    network = builder.create_network()
+    parser = trt.OnnxParser(network, TRT_LOGGER)
+     
+    # parse ONNX
+    with open(onnx_file_path, 'rb') as model:
+        print('Beginning ONNX file parsing')
+        parser.parse(model.read())
+    print('Completed parsing of ONNX file')
+
+    config = builder.create_builder_config()
+    # config is where the optimizations are specified
+    # allow TensorRT to use up to 1GB of GPU memory for tactic selection
+    #config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, 1 << 20) # 1 MiB
+    # we have only one image in batch
+    #builder.max_batch_size = 1
+    # use FP16 mode if possible
+    #if builder.platform_has_fast_fp16:
+    #    builder.fp16_mode = True
+
+# generate TensorRT engine optimized for the target platform
+    print('Building an engine...')
+    engine = builder.build_serialized_network(network, config)
+    #context = engine.create_execution_context()
+    print("Completed creating Engine")
+ 
+    return engine
+
+def export_engine(model_name):
+    ONNX_FILE_PATH = f"../models/{model_name}.onnx"
+
+    engine = build_engine(ONNX_FILE_PATH)
+
+    with open(f"../models/{model_name}.engine", "wb") as f:
+        f.write(engine)
+
+def pt_to_onnx(model_name):
+    print("convert from pt to onnx")
+    #model_name = "resnet50_base"
+
+    device = torch.device("cuda")
+    resnet50_model = torch.load(f"../models/{model_name}.pt", weights_only=False).to(device)
+    resnet50_model.eval()
+
+    ONNX_FILE_PATH = f"../models/{model_name}.onnx"
+    inputs = torch.randn(1, 3, 224, 224, device=device)
+    torch.onnx.export(resnet50_model, inputs, ONNX_FILE_PATH, export_params=True)
+
+    # check model conversion
+    onnx_model = onnx.load(ONNX_FILE_PATH)
+    onnx.checker.check_model(onnx_model)

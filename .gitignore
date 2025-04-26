@@ -180,3 +180,6 @@ cython_debug/
 
 # ignore imagenette_calibration
 models/data/imagenette_calibration
+
+#ignore models dir
+models/models
