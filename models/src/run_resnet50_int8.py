@@ -26,10 +26,12 @@ model_int8 = mtq.quantize(
     forward_loop
 )
 
+mode_int8 = model_int8.to(device)
 model_int8.eval()
 
 # now `model_int8` is your INT8‐calibrated ResNet-50
-torch.save(model_int8.state_dict(), "../models/resnet50_int8.pt")
+inputs = torch.randn(128, 3, 224, 224, device=device)
+torch.onnx.export(model_int8, inputs, "../models/resnet50_int8.onnx")
 
 # Benchmark
 benchmark(model_int8, input_shape=(128, 3, 224, 224), nruns=100)
