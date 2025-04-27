@@ -1,0 +1,9 @@
+plugin: google.cloud.gcp_compute
+projects:
+  - applied-ml-cloud-project
+auth_kind: application # Use application default credentials (user account)
+filters:
+  - status = RUNNING
+compose:
+  ansible_host: networkInterfaces[0].accessConfigs[0].natIP
+  ansible_user: ubuntu

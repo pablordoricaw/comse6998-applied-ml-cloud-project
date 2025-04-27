@@ -1,13 +1,66 @@
 - name: Install uv
-  hosts: env
+  hosts: all
   tasks:
     - name: Install uv
       become: true
       ansible.builtin.shell:
         cmd: |
           curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin/" sh
+        creates: /usr/local/bin/uv
+- name: Set up TensorRT
+  hosts: all
+  vars:
+    destination_dir: /tmp
+    tensorrt_bin_path: /usr/src/tensorrt/bin
+  tasks:
+    - name: Download TensorRT .deb file via Ansible module
+      ansible.builtin.shell:
+        cmd: |
+          gcloud storage cp gs://gcs-bkt-tensorrt/nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8_1.0-1_amd64.deb "{{ destination_dir }}"
+        creates: "{{ destination_dir }}//nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8_1.0-1_amd64.deb"
+    - name: Install TensorRT local repo .deb
+      become: true
+      ansible.builtin.shell:
+        cmd: dpkg -i "{{ destination_dir }}/nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8_1.0-1_amd64.deb"
+        creates: /var/nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8/nv-tensorrt-local-AD7406A2-keyring.gpg
+    - name: Copy TensorRT repo GPG key to keyrings
+      become: true
+      ansible.builtin.copy:
+        src: "/var/nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8/nv-tensorrt-local-AD7406A2-keyring.gpg"
+        dest: "/usr/share/keyrings/nv-tensorrt-local-AD7406A2-keyring.gpg"
+        mode: '0644'
+        remote_src: yes
+    - name: Allow read key file
+      become: true
+      ansible.builtin.shell:
+        cmd: |
+          chmod 644 /usr/share/keyrings/nv-tensorrt-local-AD7406A2-keyring.gpg
+    - name: Ensure APT source uses signed-by with the correct keyring
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/apt/sources.list.d/nv-tensorrt-local-ubuntu2204-10.9.0-cuda-12.8.list
+        line: 'deb [signed-by=/usr/share/keyrings/nv-tensorrt-local-AD7406A2-keyring.gpg] file:/var/nv-tensorrt-local-repo-ubuntu2204-10.9.0-cuda-12.8/ /'
+        regexp: '^deb '
+        create: true
+    - name: Update APT package index
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: Install TensorRT package
+      become: true
+      ansible.builtin.apt:
+        name: tensorrt
+        state: present
+        update_cache: no # Set to 'yes' if you want to ensure the cache is updated before install
+    - name: Add trtexec to global PATH for all users
+      become: true
+      ansible.builtin.copy:
+        dest: /etc/profile.d/tensorrt.sh
+        content: |
+          export PATH="$PATH:{{ tensorrt_bin_path }}"
+        mode: '0644'
 - name: Enable NVIDIA GPU Performance Counters
-  hosts: env
+  hosts: all
   become: true
   tasks:
     - name: Set Perf Counters Config
