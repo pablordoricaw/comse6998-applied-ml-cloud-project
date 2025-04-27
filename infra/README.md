@@ -50,7 +50,10 @@ This section outlines what you need to do on your local machine to be able to ma
 > 1. using a single [Pulumi stack](https://www.pulumi.com/docs/iac/concepts/stacks/) called `main`,
 > 2. deploying from local instead of a deployment pipeline.
 >
-> **‼️These decisions allow us to deploy changes faster, but require letting the rest of the team know when new changes will be deployed and shortly after committing the IaC changes deployed.**
+> **Consequences of above decisions:**
+> - No need to setup a deployment pipeline, but
+> - ‼️ Have to coordinate with rest of team when deploying new infra since changes are deployed from local repo rather than remote repo.
+> - To deploy infra, make sure to also have the role provided by the `state_backend.py` module in the [IaC](#iac-backend) section below.
 
 ### How to Preview Changes
 
@@ -68,7 +71,7 @@ uv run pulumi up
 
 We use a Google Cloud Storage bucket as the backend for the IaC. This is purely to make the project as self-contained as possible. 
 
-We've included a Python module, state_backend.py, that creates the Google Cloud Storage bucket and can manage user-level permissions to allow infra local deployments. This module uses the Google Cloud Storage Python SDK and the authentication configured for `gcloud`.
+We've included a Python module, `state_backend.py`, that creates the Google Cloud Storage bucket and can manage user-level permissions to allow infra local deployments. This module uses the Google Cloud Storage Python SDK and the authentication configured for `gcloud`.
 
 This module intends to simplify recreating the project, if needed, and avoid "secret" steps. With that said, to recreate the infra for the project, the steps to follow are:
 
