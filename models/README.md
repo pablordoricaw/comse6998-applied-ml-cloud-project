@@ -20,7 +20,7 @@ The main workload is executed on the GPU VM since some of TensorRT's optimizatio
     git config --global user.email "your_github_account_email@example.com"
     ```
 3. (Once) Clone this repo into the GPU-VM.
-2. (Once) [Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your **user credentials**.
+4. (Once) [Authenticate for using the gcloud CLI](https://cloud.google.com/docs/authentication/gcloud) with your **user credentials**.
 5. (Once) Set project with command
     ```bash
     gcloud config set project <PROJECT_ID>
@@ -30,9 +30,16 @@ The main workload is executed on the GPU VM since some of TensorRT's optimizatio
     gcloud auth application-default login
     gcloud auth application-default set-quota-project <PROJECT_ID>
     ```
-4. Write Python modules in this `models/` directory to get pre-trained models in your favorite neural network library (e.g., PyTorch, TensorFlow).
-5. Optimize the model with TensorRT.
-6. Store the optimized TensorRT model called the TensorRT engine in the Triton model repository following Triton's required directory structure.
+7. Install required dependencies.
+    ```
+    uv sync --group models
+    ```
+8. Initialize workspace.
+   ```
+   uv run src/init.py
+   ```
+9. Optimize the model with TensorRT.
+10. Store the optimized TensorRT model called the TensorRT engine in the Triton model repository following Triton's required directory structure.
 
 > [!IMPORTANT]
 > To optimize or run code that uses the GPU, coordinate with the rest of the team to avoid issues since the GPU VM is shared.
