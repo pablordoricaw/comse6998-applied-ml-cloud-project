@@ -26,6 +26,11 @@ This section outlines what you need to do on your local machine to be able to ma
 
 ### `uv` - Python Dependency & Virtual Environment Manager
 
+> [!TIP]
+> If on your local machine that's not a CUDA capable Linux machine, comment out the line `"torch-tensorrt>=2.6.0,<2.7; sys_platform == 'linux'"` in the `models` dependency group in the project's `pyproject.toml`. Otherwise, `uv` will attempt to build a CUDA version of `torch-tensorrt` even when only syncing the `infra` group as shown in step 2 below.
+>
+> This is a TensorRT issue as indicated in this [GitHub Issue](https://github.com/astral-sh/uv/issues/11363)
+
 1. Install [uv](https://docs.astral.sh/uv/#installation) (and now you can uninstall `conda`, `pyenv`, and all the rest and just use `uv` 🙂)
 2. In the root directory of the project, where the `pyproject.toml` file exists, create the Python virtual environment and install the dependencies to manage infra & configs with:
 
@@ -89,8 +94,7 @@ This module intends to simplify recreating the project, if needed, and avoid "se
 For the VM to configure,
 
 1. Start the VM.
-2. Get the VM external IP
-3. Add the IP to the `inventory.yaml` file.
+2. SSH into the VM, manually to install NVIDIA driver.
 
 ### How to Run
 
