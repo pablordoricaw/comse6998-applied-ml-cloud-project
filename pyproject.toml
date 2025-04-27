@@ -1,5 +1,5 @@
 [project]
-name = "infra"
+name = "applied-ml-cloud-project"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -10,12 +10,14 @@ name = "pypi"
 url = "https://pypi.org/simple"
 
 [[tool.uv.index]]
-name = "pytorch"
-url = "https://download.pytorch.org/whl/cu126"
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
 
 [[tool.uv.index]]
 name = "nvidia"
 url = "https://pypi.nvidia.com"
+explicit = true
 
 [dependency-groups]
 infra = [

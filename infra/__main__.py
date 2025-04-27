@@ -56,6 +56,7 @@ class Instance(pulumi.ComponentResource):
             name=name,
             zone=f"{args.region}-{args.zone}",
             machine_type=args.machine_type,
+            allow_stopping_for_update=True,
             guest_accelerators=[
                 gcp.compute.InstanceGuestAcceleratorArgs(
                     count=args.gpu_count, type=args.gpu_type
@@ -63,9 +64,9 @@ class Instance(pulumi.ComponentResource):
             ],
             boot_disk=gcp.compute.InstanceBootDiskArgs(
                 initialize_params=gcp.compute.InstanceBootDiskInitializeParamsArgs(
-                    image="projects/ml-images/global/images/c0-deeplearning-common-cu124-v20250325-debian-11",
+                    image="projects/mpi-nvidia-ngc-public/global/images/nvidia-gpu-cloud-vmi-base-2024-10-2-x86-64",
                     enable_confidential_compute=False,
-                    size=100,  # deep learning images are like 50GBs...
+                    size=300,  # deep learning images are like 50GBs...
                     type="pd-balanced",
                 )
             ),
@@ -122,7 +123,6 @@ if __name__ == "__main__":
         gpu_vm_iam_member = gcp.compute.InstanceIAMMember(
             f"gpu-vm-iam-ssh-admin-{gcp_user.split(':')[-1]}",
             project=config["gcp"]["project"],
-            zone=config["gcp"]["zone"],
             instance_name=gpu_vm.instance.id,
             role="roles/compute.instanceAdmin.v1",
             member=gcp_user,
@@ -157,5 +157,26 @@ if __name__ == "__main__":
         uniform_bucket_level_access=True,
         hierarchical_namespace=gcp.storage.BucketHierarchicalNamespaceArgs(
             enabled=True
+        ),
+    )
+
+    tensorrt_bkt = gcp.storage.Bucket(
+        "gcs-bkt-tensorrt",
+        name="gcs-bkt-tensorrt",
+        location=config["gcp"]["region"],
+        storage_class="STANDARD",
+        autoclass=gcp.storage.BucketAutoclassArgs(enabled=False),
+        versioning=gcp.storage.BucketVersioningArgs(enabled=True),
+        force_destroy=True,
+        soft_delete_policy=gcp.storage.BucketSoftDeletePolicyArgs(
+            # Disable the soft delete policy on the bucket to allow immediately to delete objects.
+            # https://www.pulumi.com/registry/packages/gcp/api-docs/storage/bucket/#bucketsoftdeletepolicy
+            retention_duration_seconds=0
+        ),
+        default_event_based_hold=False,
+        enable_object_retention=False,
+        uniform_bucket_level_access=True,
+        hierarchical_namespace=gcp.storage.BucketHierarchicalNamespaceArgs(
+            enabled=False
         ),
     )
