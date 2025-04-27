@@ -35,17 +35,18 @@ def create_argparser():
     parser.add_argument("--artifact-registry", required=True)
     return parser
 
+
 def docker_operation_with_spinner(spinner_text, docker_operation, *args, **kwargs):
     with yaspin(text=spinner_text, color="cyan") as spinner:
         try:
             for line in docker_operation(*args, **kwargs):
-                if 'id' in line and 'status' in line:
-                    layer = line['id']
-                    status = line['status']
-                    progress = line.get('progress', '')
+                if "id" in line and "status" in line:
+                    layer = line["id"]
+                    status = line["status"]
+                    progress = line.get("progress", "")
                     spinner.text = f"{status}: {layer} {progress}"
-                elif 'status' in line:
-                    spinner.text = line['status']
+                elif "status" in line:
+                    spinner.text = line["status"]
             spinner.ok("✅ ")
             return True
         except Exception as e:
@@ -53,14 +54,19 @@ def docker_operation_with_spinner(spinner_text, docker_operation, *args, **kwarg
             print(f"Operation failed: {e}")
             return False
 
+
 pull_image = partial(
     docker_operation_with_spinner,
-    docker_operation=lambda docker_client, image: docker_client.api.pull(image, stream=True, decode=True)
+    docker_operation=lambda docker_client, image: docker_client.api.pull(
+        image, stream=True, decode=True
+    ),
 )
 
 push_image = partial(
     docker_operation_with_spinner,
-    docker_operation=lambda docker_client, repo: docker_client.images.push(repo, stream=True, decode=True)
+    docker_operation=lambda docker_client, repo: docker_client.images.push(
+        repo, stream=True, decode=True
+    ),
 )
 
 
@@ -99,10 +105,18 @@ def main():
 
         target_repo = f"{location}-docker.pkg.dev/{project_id}/{args.artifact_registry}/tritonserver"
 
-        pull_image(docker_client=docker_client, image=args.triton_image_uri, spinner_text="Downloading NVIDIA Triton container image...")
+        pull_image(
+            docker_client=docker_client,
+            image=args.triton_image_uri,
+            spinner_text="Downloading NVIDIA Triton container image...",
+        )
         image = docker_client.images.get(args.triton_image_uri)
         image.tag(repository=target_repo)
-        push_image(docker_client=docker_client, repo=target_repo, spinner_text="Pushing NVIDIA Triton container image...")
+        push_image(
+            docker_client=docker_client,
+            repo=target_repo,
+            spinner_text="Pushing NVIDIA Triton container image...",
+        )
 
     else:
         print(
@@ -112,4 +126,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
