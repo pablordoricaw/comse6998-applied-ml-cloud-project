@@ -163,17 +163,15 @@ def export_engine(model_name):
     with open(f"../models/{model_name}.engine", "wb") as f:
         f.write(engine)
 
-def pt_to_onnx(model_name):
+def pt_to_onnx(model, model_name):
     print("convert from pt to onnx")
     #model_name = "resnet50_base"
 
-    device = torch.device("cuda")
-    resnet50_model = torch.load(f"../models/{model_name}.pt", weights_only=False).to(device)
-    resnet50_model.eval()
-
     ONNX_FILE_PATH = f"../models/{model_name}.onnx"
-    inputs = torch.randn(1, 3, 224, 224, device=device)
-    torch.onnx.export(resnet50_model, inputs, ONNX_FILE_PATH, export_params=True)
+    device = torch.device("cuda")
+
+    inputs = torch.randn(1, 3, 224, 224, device="cuda")
+    torch.onnx.export(model, inputs, ONNX_FILE_PATH, export_params=True)
 
     # check model conversion
     onnx_model = onnx.load(ONNX_FILE_PATH)

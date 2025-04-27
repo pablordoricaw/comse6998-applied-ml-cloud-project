@@ -17,9 +17,6 @@ url = "https://download.pytorch.org/whl/cu126"
 name = "nvidia"
 url = "https://pypi.nvidia.com"
 
-[tool.uv.sources]
-torch-tensorrt = { index = "pytorch" }
-
 [dependency-groups]
 infra = [
     "ansible>=10.7.0",
@@ -31,8 +28,8 @@ models = [
     "pillow>=11.0.0",
     "torch==2.6.0",
     "torchvision>=0.20.0",
-    "torch-tensorrt==2.6.0",
-    "nvidia-modelopt[all,torch]>=0.27.1",
     "setuptools>=70.2.0",
     "pycuda>=2025.1",
+    "torch-tensorrt>=2.6.0",
+    "nvidia-modelopt[all]>=0.27.1",
 ]
