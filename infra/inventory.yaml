@@ -1,5 +1,0 @@
-env:
-  hosts:
-    vm:
-      ansible_host: <EXTERNAL VM IP ADDRESS>
-      ansible_ssh_private_key_file: </path/to/.ssh/google_compute_engine>
