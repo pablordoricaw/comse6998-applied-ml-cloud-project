@@ -770,7 +770,6 @@ models = [
     { name = "numpy" },
     { name = "nvidia-modelopt", extra = ["all"] },
     { name = "pillow" },
-    { name = "pycuda" },
     { name = "setuptools" },
     { name = "torch" },
     { name = "torch-tensorrt" },
@@ -789,7 +788,6 @@ models = [
     { name = "numpy", specifier = ">=1.26.0" },
     { name = "nvidia-modelopt", extras = ["all"], specifier = ">=0.27.1" },
     { name = "pillow", specifier = ">=11.0.0" },
-    { name = "pycuda", specifier = ">=2025.1" },
     { name = "setuptools", specifier = ">=70.2.0" },
     { name = "torch", specifier = "==2.6.0" },
     { name = "torch-tensorrt", specifier = ">=2.6.0" },
@@ -1603,15 +1601,6 @@ wheels = [
 ]
 
 [[package]]
-name = "platformdirs"
-version = "4.3.7"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b6/2d/7d512a3913d60623e7eb945c6d1b4f0bddf1d0b7ada5225274c87e5b53d1/platformdirs-4.3.7.tar.gz", hash = "sha256:eb437d586b6a0986388f0d6f74aa0cde27b48d0e3d66843640bfb6bdcdb6e351", size = 21291, upload_time = "2025-03-19T20:36:10.989Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6d/45/59578566b3275b8fd9157885918fcd0c4d74162928a5310926887b856a51/platformdirs-4.3.7-py3-none-any.whl", hash = "sha256:a03875334331946f13c549dbd8f4bac7a13a50a895a0eb1e8c6a8ace80d40a94", size = 18499, upload_time = "2025-03-19T20:36:09.038Z" },
-]
-
-[[package]]
 name = "propcache"
 version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1842,17 +1831,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pycuda"
-version = "2025.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "mako" },
-    { name = "platformdirs" },
-    { name = "pytools" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/15/31/12640e87fcc6fc42468dfbeb38f9c0fd7b0a25bf9e6d9e0a7609f915dd18/pycuda-2025.1.tar.gz", hash = "sha256:52738e9a941c295c0a5df6aa0d49ac89f66d835dacce9c9c8b84e7530fe4622f", size = 1689589, upload_time = "2025-02-07T22:02:42.977Z" }
-
-[[package]]
 name = "pydantic"
 version = "2.11.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1994,19 +1972,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload_time = "2024-03-01T18:36:20.211Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload_time = "2024-03-01T18:36:18.57Z" },
-]
-
-[[package]]
-name = "pytools"
-version = "2025.1.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "platformdirs" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/5c/85f83eba2b6e6bae6f9d293dbae75d25d5f8e3dcbce287bfedb9306da091/pytools-2025.1.2.tar.gz", hash = "sha256:c00db94fdd9a9639899732cbf91bcb291786751cc90380b07d738182ca50f2b1", size = 80400, upload_time = "2025-03-27T23:19:34.305Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5d/44/a5c139fc030c21c02ba77546ef6109a63fd448ec51ddc19b06c2a249ecec/pytools-2025.1.2-py3-none-any.whl", hash = "sha256:bd4e9862a3c6debbab74da14caae8cd8d6f4434effc69ad5d9841df255a95ddc", size = 92948, upload_time = "2025-03-27T23:19:33.24Z" },
 ]
 
 [[package]]

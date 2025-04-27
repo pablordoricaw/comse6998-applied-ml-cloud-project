@@ -6,16 +6,11 @@ import torch
 import numpy as np
 import time
 import onnx
-import pycuda.driver as cuda
-import pycuda.autoinit
 import tensorrt as trt
-import torch.backends.cudnn as cudnn
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, SubsetRandomSampler
 from PIL import Image
  
-cudnn.benchmark = True
-
 with open("../data/test_images/imagenet_class_index.json", "r") as f:
     class_idx = json.load(f)
 

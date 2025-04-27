@@ -31,7 +31,6 @@ models = [
     "torch==2.6.0",
     "torchvision>=0.20.0",
     "setuptools>=70.2.0",
-    "pycuda>=2025.1",
     "torch-tensorrt>=2.6.0",
     "nvidia-modelopt[all]>=0.27.1",
 ]
