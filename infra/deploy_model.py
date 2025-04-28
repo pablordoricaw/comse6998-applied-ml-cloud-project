@@ -41,10 +41,7 @@ def deploy_model(
     accelerator_count=1,
     min_replica_count=1,
     max_replica_count=1,
-    traffic_percentage=100,
-    traffic_split=None,
-    metadata=None,
-    sync=True
+    traffic_percentage=100
 ):
         
     deployed_model = endpoint.deploy(
@@ -55,16 +52,13 @@ def deploy_model(
         accelerator_count=accelerator_count,
         min_replica_count=min_replica_count,
         max_replica_count=max_replica_count,
-        traffic_percentage=traffic_percentage,
-        traffic_split=traffic_split,
-        metadata=metadata,
-        sync=sync
+        traffic_percentage=traffic_percentage
     )
     
-    if sync:
-        print(f"Deployed model to endpoint {endpoint.name}")
-    else:
-        print(f"Deploying model to endpoint {endpoint.name}")
+    # if sync:
+    #     print(f"Deployed model to endpoint {endpoint.name}")
+    # else:
+    #     print(f"Deploying model to endpoint {endpoint.name}")
     
     return deployed_model
 
@@ -73,7 +67,7 @@ def main():
     PROJECT_ID = "applied-ml-cloud-project"
     LOCATION = "us-east1"
     MACHINE_TYPE="g2-standard-8"
-    ACCLERATOR_TYPE="NVIDIA_TESLA_L4"
+    ACCELERATOR_TYPE="NVIDIA_L4"
     
     # Initialize Vertex AI
     setup_vertex_ai(PROJECT_ID, LOCATION)
@@ -84,8 +78,8 @@ def main():
 
     # Upload model - TODO: UPDATE PATHS WHEN MODEL TEAM IS DONE AND STORED
     model = upload_model(
-        display_name="tensorrt-optimized-model",
-        artifact_uri="gs://gcs-bkt-model-repository/model-directory",
+        display_name="resnet50-base-model",
+        artifact_uri="gs://gcs-bkt-model-repository/models/object_detector",
         container_image_uri="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-trtllm-python"
     )
     
@@ -94,8 +88,8 @@ def main():
         model=model, 
         endpoint=endpoint, 
         machine_type=MACHINE_TYPE, 
-        accelerator_type=ACCLERATOR_TYPE, 
-        deployed_model_display_name="tensorrt-optimized-deployment"
+        accelerator_type=ACCELERATOR_TYPE, 
+        deployed_model_display_name="resnet50-base-deployment"
     )
     
     print(f"Model deployment complete. Endpoint: {endpoint.resource_name}")
