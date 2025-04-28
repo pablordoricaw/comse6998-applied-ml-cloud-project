@@ -17,6 +17,7 @@ def get_or_create_endpoint(display_name):
         print(f"Created new endpoint: {endpoint.name}")
         return endpoint
 
+
 def get_or_upload_model(
     project_id,
     location,
@@ -187,7 +188,6 @@ def main():
 
         spinner.ok("✅ Done")
 
->>>>>>> f47a21e (feat(infra): allow --args to configure deployment to Vertex AI and pretty spinner in output)
 
 if __name__ == "__main__":
     main()
