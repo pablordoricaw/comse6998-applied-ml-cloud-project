@@ -26,9 +26,14 @@ def upload_model(display_name, artifact_uri, container_image_uri, serving_contai
         display_name=display_name,
         artifact_uri=artifact_uri,
         serving_container_image_uri=container_image_uri,
-        serving_container_predict_route="/v2/models/model/infer",
+        serving_container_predict_route="/v2/models/resnet50_base/infer",
         serving_container_health_route="/v2/health/ready",
-        serving_container_args=serving_container_args
+        serving_container_args=[
+            "--strict-model-config=false",
+            "--model-control-mode=explicit",
+            "--load-model=resnet50_base",
+            "--model-repository=/models"
+        ]
     )
     print(f"Uploaded model: {model.name}")
     return model
@@ -80,9 +85,8 @@ def main():
     # Upload model
     model = upload_model(
         display_name="resnet50-base-model",
-        artifact_uri="gs://gcs-bkt-model-repository/resnet50/resnet50_base",
-        container_image_uri="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-trtllm-python",
-        serving_container_args=["--strict-model-config=false"]
+        artifact_uri="gs://gcs-bkt-model-repository/resnet50",
+        container_image_uri="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-trtllm-python"
     )
     
     # Deploy model
