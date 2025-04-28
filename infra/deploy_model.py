@@ -1,10 +1,17 @@
 import argparse
-from dataclasses import dataclass
-from typing import Optional
+import json
 import yaml
 
+from dataclasses import dataclass
+from typing import Optional
+
 from google.cloud import aiplatform
+from prompt_toolkit import HTML, print_formatted_text
+from prompt_toolkit.styles import Style
 from yaspin import yaspin
+
+done_style = Style.from_dict({"msg": "#4caf50 bold", "sub-msg": ""})
+print = print_formatted_text
 
 
 def get_or_create_endpoint(display_name):
@@ -151,12 +158,18 @@ def main():
                 "ERROR: Missing either --pulumi-config-file or both --project-id and --location arguments"
             )
 
-    with yaspin(color="cyan") as spinner:
+    with yaspin(color="cyan", text="elapsed time", timer=True) as spinner:
         aiplatform.init(project=deploy_config.project_id, location=deploy_config.region)
 
         spinner.write("> Getting or creating endpoint...")
         endpoint = get_or_create_endpoint(args.endpoint_name)
-        spinner.write(f"> Endpoint {endpoint.display_name}")
+        with spinner.hidden():
+            print(
+                HTML(
+                    f"<b>></b> <msg>{endpoint.display_name} </msg><sub-msg>endpoint</sub-msg>"
+                ),
+                style=done_style,
+            )
 
         spinner.write(
             f"> Getting or uploading model '{args.model_display_name}' to Vertex AI Model Registry (can take a few min)..."
@@ -170,15 +183,19 @@ def main():
             args.vertex_model_version,
             args.triton_container_image_uri,
         )
-        spinner.write(
-            f"> Model {model.display_name} | id: {model.name} | version: {model.version_id}"
-        )
+        with spinner.hidden():
+            print(
+                HTML(
+                    f"<b>></b> <msg>{model.display_name} </msg><sub-msg>model | id: {model.name} | version: {model.version_id} model</sub-msg>"
+                ),
+                style=done_style,
+            )
 
         if args.deploy:
             spinner.write(
                 f"> Deploying {args.model_display_name} to {args.endpoint_name} (takes a while)..."
             )
-            deployed_model = endpoint.deploy(
+            endpoint.deploy(
                 model=model,
                 deployed_model_display_name=f"{args.model_display_name}-deployment",
                 machine_type=deploy_config.machine_type,
@@ -189,8 +206,13 @@ def main():
                 min_replica_count=1,
                 max_replica_count=1,
             )
-            spinner.write(f"> Deployed model: {deployed_model}")
-
+            with spinner.hidden():
+                print(
+                    HTML(
+                        f"<b>></b> <msg>{model.display_name} </msg><sub-msg>deployed model</sub-msg>"
+                    ),
+                    style=done_style,
+                )
         spinner.ok("✅ Done")
 
 
