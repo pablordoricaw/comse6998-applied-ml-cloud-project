@@ -71,3 +71,18 @@
     - name: Print Reboot Reminder Message
       ansible.builtin.debug:
         msg: Reboot the managed node to finish the NVIDIA GPU performance counters setup
+- name: Set up Docker for Current User
+  hosts: all
+  become: true
+  tasks:
+    - name: Print Message
+      ansible.builtin.debug:
+        msg: Docker is set up for current user running the Ansible playbook. If needed for other users, have them run this Ansible play.
+    - name: Create Docker Group
+      ansible.builtin.shell:
+        cmd: |
+          groupadd docker
+    - name: Add USER to Docker Group
+      ansible.builtin.shell:
+        cmd: |
+          usermod -aG docker $USER

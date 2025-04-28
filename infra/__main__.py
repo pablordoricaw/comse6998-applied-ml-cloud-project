@@ -120,8 +120,9 @@ if __name__ == "__main__":
     )
 
     for gcp_user in ["user:" + member for member in TEAM_MEMBERS]:
+        user_email = gcp_user.split(":")[-1]
         gpu_vm_iam_member = gcp.compute.InstanceIAMMember(
-            f"gpu-vm-iam-ssh-admin-{gcp_user.split(':')[-1]}",
+            f"gpu-vm-iam-ssh-admin-{user_email}",
             project=config["gcp"]["project"],
             instance_name=gpu_vm.instance.id,
             role="roles/compute.instanceAdmin.v1",
@@ -158,6 +159,18 @@ if __name__ == "__main__":
         hierarchical_namespace=gcp.storage.BucketHierarchicalNamespaceArgs(
             enabled=True
         ),
+    )
+    # model_repo_bkt_iam_member = gcp.storage.BucketIAMMember(
+    #     f"model_repo_bkt_iam_member-{user_email}",
+    #     bucket=model_repo_bkt,
+    #     role="roles/storage.buckets.get",
+    #     member=gcp_user,
+    # )
+    model_repo_bkt_iam_member = gcp.storage.BucketIAMMember(
+        "model_repo_bkt_iam_member",
+        bucket=model_repo_bkt,
+        role="roles/storage.admin",
+        member=f"projectOwner:{config['gcp']['project']}",
     )
 
     tensorrt_bkt = gcp.storage.Bucket(
