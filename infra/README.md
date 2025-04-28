@@ -26,6 +26,11 @@ This section outlines what you need to do on your local machine to be able to ma
 
 ### `uv` - Python Dependency & Virtual Environment Manager
 
+> [!TIP]
+> If on your local machine that's not a CUDA capable Linux machine, comment out the line `"torch-tensorrt>=2.6.0,<2.7; sys_platform == 'linux'"` in the `models` dependency group in the project's `pyproject.toml`. Otherwise, `uv` will attempt to build a CUDA version of `torch-tensorrt` even when only syncing the `infra` group as shown in step 2 below.
+>
+> This is a TensorRT issue as indicated in this [GitHub Issue](https://github.com/astral-sh/uv/issues/11363)
+
 1. Install [uv](https://docs.astral.sh/uv/#installation) (and now you can uninstall `conda`, `pyenv`, and all the rest and just use `uv` 🙂)
 2. In the root directory of the project, where the `pyproject.toml` file exists, create the Python virtual environment and install the dependencies to manage infra & configs with:
 
@@ -45,7 +50,10 @@ This section outlines what you need to do on your local machine to be able to ma
 > 1. using a single [Pulumi stack](https://www.pulumi.com/docs/iac/concepts/stacks/) called `main`,
 > 2. deploying from local instead of a deployment pipeline.
 >
-> **‼️These decisions allow us to deploy changes faster, but require letting the rest of the team know when new changes will be deployed and shortly after committing the IaC changes deployed.**
+> **Consequences of above decisions:**
+> - No need to setup a deployment pipeline, but
+> - ‼️ Have to coordinate with rest of team when deploying new infra since changes are deployed from local repo rather than remote repo.
+> - To deploy infra, make sure to also have the role provided by the `state_backend.py` module in the [IaC](#iac-backend) section below.
 
 ### How to Preview Changes
 
@@ -63,7 +71,7 @@ uv run pulumi up
 
 We use a Google Cloud Storage bucket as the backend for the IaC. This is purely to make the project as self-contained as possible. 
 
-We've included a Python module, state_backend.py, that creates the Google Cloud Storage bucket and can manage user-level permissions to allow infra local deployments. This module uses the Google Cloud Storage Python SDK and the authentication configured for `gcloud`.
+We've included a Python module, `state_backend.py`, that creates the Google Cloud Storage bucket and can manage user-level permissions to allow infra local deployments. This module uses the Google Cloud Storage Python SDK and the authentication configured for `gcloud`.
 
 This module intends to simplify recreating the project, if needed, and avoid "secret" steps. With that said, to recreate the infra for the project, the steps to follow are:
 
@@ -89,8 +97,7 @@ This module intends to simplify recreating the project, if needed, and avoid "se
 For the VM to configure,
 
 1. Start the VM.
-2. Get the VM external IP
-3. Add the IP to the `inventory.yaml` file.
+2. SSH into the VM, manually to install NVIDIA driver.
 
 ### How to Run
 

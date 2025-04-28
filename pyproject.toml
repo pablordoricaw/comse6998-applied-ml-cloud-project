@@ -1,5 +1,5 @@
 [project]
-name = "infra"
+name = "applied-ml-cloud-project"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -10,15 +10,14 @@ name = "pypi"
 url = "https://pypi.org/simple"
 
 [[tool.uv.index]]
-name = "pytorch"
-url = "https://download.pytorch.org/whl/cu126"
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
 
 [[tool.uv.index]]
 name = "nvidia"
 url = "https://pypi.nvidia.com"
-
-[tool.uv.sources]
-torch-tensorrt = { index = "pytorch" }
+explicit = true
 
 [dependency-groups]
 infra = [
@@ -31,5 +30,7 @@ models = [
     "pillow>=11.0.0",
     "torch==2.6.0",
     "torchvision>=0.20.0",
-    "torch-tensorrt"
+    "setuptools>=70.2.0",
+    "torch-tensorrt>=2.6.0",
+    "nvidia-modelopt[all]>=0.27.1",
 ]
