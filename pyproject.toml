@@ -22,15 +22,17 @@ explicit = true
 [dependency-groups]
 infra = [
     "ansible>=10.7.0",
+    "google-cloud-aiplatform>=1.90.0",
     "pulumi>=3.163.0",
     "pulumi-gcp>=8.27.0",
+    "yaspin>=3.1.0",
 ]
 models = [
     "numpy>=1.26.0",
     "pillow>=11.0.0",
-    "torch==2.6.0",
-    "torchvision>=0.20.0",
+    "torch==2.6.0; sys_platform == 'linux'",
+    "torchvision>=0.20.0; sys_platform == 'linux'",
+    "torch-tensorrt>=2.6.0,<2.7; sys_platform == 'linux'"
     "setuptools>=70.2.0",
-    "torch-tensorrt>=2.6.0",
-    "nvidia-modelopt[all]>=0.27.1",
+    "nvidia-modelopt[all]>=0.27.1; sys_platform == 'linux'",
 ]
