@@ -21,13 +21,14 @@ def get_or_create_endpoint(endpoint_name):
         return endpoint
 
 # Upload / register model to Vertex AI Model Registry
-def upload_model(display_name, artifact_uri, container_image_uri):
+def upload_model(display_name, artifact_uri, container_image_uri, serving_container_args=None):
     model = aiplatform.Model.upload(
         display_name=display_name,
         artifact_uri=artifact_uri,
         serving_container_image_uri=container_image_uri,
         serving_container_predict_route="/v2/models/model/infer",
-        serving_container_health_route="/v2/health/ready"
+        serving_container_health_route="/v2/health/ready",
+        serving_container_args=serving_container_args
     )
     print(f"Uploaded model: {model.name}")
     return model
@@ -76,11 +77,12 @@ def main():
     endpoint = get_or_create_endpoint("image-classification-endpoint")
     
 
-    # Upload model - TODO: UPDATE PATHS WHEN MODEL TEAM IS DONE AND STORED
+    # Upload model
     model = upload_model(
         display_name="resnet50-base-model",
-        artifact_uri="gs://gcs-bkt-model-repository/models/object_detector",
-        container_image_uri="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-trtllm-python"
+        artifact_uri="gs://gcs-bkt-model-repository/resnet50/resnet50_base",
+        container_image_uri="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-trtllm-python",
+        serving_container_args=["--strict-model-config=false"]
     )
     
     # Deploy model
