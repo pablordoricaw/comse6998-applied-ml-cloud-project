@@ -61,7 +61,12 @@ def create_argparser():
     parser.add_argument(
         "--accelerator-type",
         required=False,
-        help="GCP accelerator type that is compatible withe machine-type e.g. for g2-standard-4, NVIDIA_TESLA_L4",
+        help="GCP accelerator type that is compatible with machine-type e.g. for g2-standard-4, NVIDIA_TESLA_L4",
+    )
+    parser.add_argument(
+        "--accelerator-count",
+        required=False,
+        help="Number of accelerators to deploy with the machine-type.",
     )
     parser.add_argument(
         "--pulumi-config-file",
