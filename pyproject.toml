@@ -1,7 +1,7 @@
 [project]
 name = "applied-ml-cloud-project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Applied ML in the Cloud Project - A Study of Optimization Techniques for a Scalable Image Classification Inference Service on the Cloud"
 readme = "README.md"
 requires-python = ">=3.10"
 
@@ -36,4 +36,9 @@ models = [
     "torch-tensorrt>=2.6.0,<2.7; sys_platform == 'linux'",
     "setuptools>=70.2.0",
     "nvidia-modelopt[all]>=0.27.1; sys_platform == 'linux'",
+]
+web = [
+    "google-cloud-aiplatform>=1.90.0",
+    "streamlit>=1.44.1",
+    "watchdog>=6.0.0",
 ]
