@@ -23,6 +23,7 @@ explicit = true
 infra = [
     "ansible>=10.7.0",
     "google-cloud-aiplatform>=1.90.0",
+    "prompt-toolkit>=3.0.51",
     "pulumi>=3.163.0",
     "pulumi-gcp>=8.27.0",
     "yaspin>=3.1.0",
