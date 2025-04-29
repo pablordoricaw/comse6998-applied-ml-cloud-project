@@ -1,5 +1,4 @@
 import argparse
-import json
 import yaml
 
 from dataclasses import dataclass
@@ -20,7 +19,10 @@ def get_or_create_endpoint(display_name):
         print(f"Found existing endpoint: {endpoints[0].name}")
         return endpoints[0]
     else:
-        endpoint = aiplatform.Endpoint.create(display_name=display_name)
+        endpoint = aiplatform.Endpoint.create(
+            display_name=display_name,
+            dedicated_endpoint_enabled=True,  # to allow up to 10MB payload size
+        )
         print(f"Created new endpoint: {endpoint.name}")
         return endpoint
 
