@@ -184,6 +184,7 @@ models = [
     { name = "numpy" },
     { name = "nvidia-modelopt", extra = ["all"], marker = "sys_platform == 'linux'" },
     { name = "pillow" },
+    { name = "polygraphy" },
     { name = "setuptools" },
     { name = "tensorrt" },
     { name = "torch", marker = "sys_platform == 'linux'" },
@@ -210,6 +211,7 @@ models = [
     { name = "numpy", specifier = ">=1.26.0" },
     { name = "nvidia-modelopt", extras = ["all"], marker = "sys_platform == 'linux'", specifier = ">=0.27.1" },
     { name = "pillow", specifier = ">=11.0.0" },
+    { name = "polygraphy", specifier = ">=0.49.20" },
     { name = "setuptools", specifier = ">=70.2.0" },
     { name = "tensorrt", specifier = ">=10.9.0.34" },
     { name = "torch", marker = "sys_platform == 'linux'", specifier = "==2.6.0" },
@@ -1825,6 +1827,14 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/70/53/b309b4a497b09655cb7e07088966881a57d082f48ac3cb54ea729fd2c6cf/pip-25.0.1.tar.gz", hash = "sha256:88f96547ea48b940a3a385494e181e29fb8637898f88d88737c5049780f196ea", size = 1950850, upload_time = "2025-02-09T17:14:04.423Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c9/bc/b7db44f5f39f9d0494071bddae6880eb645970366d0a200022a1a93d57f5/pip-25.0.1-py3-none-any.whl", hash = "sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f", size = 1841526, upload_time = "2025-02-09T17:14:01.463Z" },
+]
+
+[[package]]
+name = "polygraphy"
+version = "0.49.20"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/5c/0dadb979dc4eb55626b647628966948d1ffa468f893fe1c92f30f2e60002/polygraphy-0.49.20-py2.py3-none-any.whl", hash = "sha256:45b11185800522eca8759cf3133c76e41fd9a71e36c3fe6d5e7a4429d98de309", size = 354937, upload_time = "2025-03-05T18:45:22.785Z" },
 ]
 
 [[package]]

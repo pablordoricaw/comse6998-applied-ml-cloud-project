@@ -36,6 +36,7 @@ models = [
     "setuptools>=70.2.0",
     "nvidia-modelopt[all]>=0.27.1; sys_platform == 'linux'",
     "tensorrt>=10.9.0.34",
+    "polygraphy>=0.49.20",
 ]
 web = [
     "google-cloud-aiplatform>=1.90.0",
