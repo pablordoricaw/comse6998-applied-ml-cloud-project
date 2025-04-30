@@ -22,24 +22,27 @@ def create_argparser():
     parser.add_argument("--artifact-registry", required=True)
     parser.add_argument(
         "--region",
-        required=True,
+        required=False,
         default="us-east1",
         help="GCP region where the Artifact Registry repository is located. (default: us-east1)",
     )
     parser.add_argument(
         "--model-repo",
-        required=True,
+        required=False,
         default="gs://gcs-bkt-model-repository",
         help="(default: gs://gcs-bkt-model-repository",
     )
     parser.add_argument(
         "--model",
-        required=True,
+        required=False,
         default="resnet50_pruned",
         help="(default resnet50_pruned",
     )
     parser.add_argument(
-        "--triton-image-tag", default="24.12-py3", help="(default: 24.12-py3"
+        "--triton-image-tag",
+        required=False,
+        default="24.12-py3",
+        help="(default: 24.12-py3",
     )
     parser.add_argument(
         "--detach", action="store_true", help="Run container in background"
