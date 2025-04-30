@@ -106,10 +106,16 @@ def create_argparser():
         default="gs://gcs-bkt-model-repository",
     )
     parser.add_argument(
-        "--triton-container-image-uri",
+        "--triton-image-tag",
         required=False,
-        help="Path to NVIDIA Triton Server container image.",
-        default="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-py3",
+        default="24.12-py3",
+        help="(default: 24.12-py3",
+    )
+    parser.add_argument(
+        "--triton-artifact-registry",
+        required=False,
+        default="ar-cntrs-repo",
+        help="Artifact registry repository where the Triton Server container image is stored (default: ar-cntrs-repo",
     )
     parser.add_argument("--deploy", required=False, action="store_true", default=False)
     return parser
@@ -176,6 +182,11 @@ def main():
         spinner.write(
             f"> Getting or uploading model '{args.model_display_name}' to Vertex AI Model Registry (can take a few min)..."
         )
+        triton_container_image_uri = (
+            f"{deploy_config.region}-docker.pkg.dev/"
+            f"{deploy_config.project_id}/{args.triton_artifact_registry}/"
+            f"tritonserver:{args.triton_image_tag}"
+        )
         model = get_or_upload_model(
             deploy_config.project_id,
             deploy_config.region,
@@ -183,7 +194,7 @@ def main():
             args.triton_model_repository,
             args.vertex_model_id,
             args.vertex_model_version,
-            args.triton_container_image_uri,
+            triton_container_image_uri,
         )
         with spinner.hidden():
             print(
