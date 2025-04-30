@@ -2,7 +2,6 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "docker",
-#     "yaspin",
 # ]
 # ///
 
@@ -11,7 +10,6 @@ import os
 import signal
 import sys
 import docker
-from yaspin import yaspin
 
 
 def create_argparser():
