@@ -1,6 +1,5 @@
 import torch
 import torchvision
-import torch_tensorrt
 from torchvision.models import resnet50
 from utils import benchmark, get_imagenette_dataloader, pt_to_onnx, export_engine
 import numpy as np
@@ -12,7 +11,7 @@ from onnxruntime.quantization import quantize_dynamic, QuantType
 model_name = "resnet50_int8"
 
 resnet50_model = resnet50(weights=None)
-state = torch.load(f"../resnet50_base.pt", map_location='cuda')
+state = torch.load(f"../models/resnet50_base.pt", map_location='cuda')
 resnet50_model.load_state_dict(state)
 resnet50_model.to("cuda").eval()
 calib_size = 256

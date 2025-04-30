@@ -8,7 +8,7 @@ model_name = "resnet50_sparse"
 
 # Load model
 model = resnet50(weights=None)
-state = torch.load("../resnet50_base.pt", map_location="cuda")
+state = torch.load("../models/resnet50_base.pt", map_location="cuda")
 model.load_state_dict(state)
 model.to("cuda").eval()
 

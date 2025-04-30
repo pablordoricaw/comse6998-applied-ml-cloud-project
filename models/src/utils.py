@@ -155,7 +155,7 @@ def export_engine(model_name):
 
     engine = build_engine(ONNX_FILE_PATH)
 
-    with open(f"../models/{model_name}.engine", "wb") as f:
+    with open(f"../models/{model_name}.plan", "wb") as f:
         f.write(engine)
 
 def pt_to_onnx(model, model_name):

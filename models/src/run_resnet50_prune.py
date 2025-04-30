@@ -8,7 +8,7 @@ model_name = "resnet50_pruned"
 
 # -- Load model --
 resnet50_model = resnet50(weights=None)
-state = torch.load("../resnet50_base.pt", map_location="cuda")
+state = torch.load("../models/resnet50_base.pt", map_location="cuda")
 resnet50_model.load_state_dict(state)
 resnet50_model.to("cuda").eval()
 
