@@ -12,7 +12,9 @@ state = torch.load("../models/resnet50_base.pt", map_location="cuda")
 resnet50_model.load_state_dict(state)
 resnet50_model.to("cuda").eval()
 
-validation_loader = get_imagenette_dataloader(num_samples=100)
+
+train_loader = get_imagenette_dataloader(num_samples=1500)
+validation_loader = get_imagenette_dataloader(num_samples=500)
 
 # -- Create dummy input -- 
 dummy_input = torch.randn(1, 3, 224, 224).to("cuda")
@@ -33,10 +35,11 @@ def score_func(model):
     return correct / total
 
 mode = "fastnas"
-constraints = {"flops": "50%"}
+constraints = {"flops": "70%"}
 config = {
     "verbose": True,
     "score_func": score_func,
+    "data_loader": train_loader,
 }
 
 # -- Prune model --
