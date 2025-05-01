@@ -37,14 +37,33 @@ def get_or_upload_model(
     triton_container_image_uri,
 ):
     if vertex_model_id:
-        return aiplatform.Model(
-            f"projects/{project_id}/locations/{location}/models/{vertex_model_id}@{vertex_model_version}"
+        parent_model_name = (
+            f"projects/{project_id}/locations/{location}/models/{vertex_model_id}"
         )
+        versioned_model_name = f"{parent_model_name}@{vertex_model_version}"
+
+        try:
+            # Attempt to retrieve existing version
+            return aiplatform.Model(versioned_model_name)
+        except Exception:
+            # Upload new version under parent model
+            return aiplatform.Model.upload(
+                display_name=model_display_name,
+                artifact_uri=model_repository,
+                parent_model=parent_model_name,
+                serving_container_image_uri=triton_container_image_uri,
+                serving_container_predict_route="/v2/models/model/infer",
+                serving_container_health_route="/v2/health/ready",
+                serving_container_args=[
+                    "--model-control-mode=explicit",
+                    f"--load-model={model_display_name}",
+                ],
+            )
     else:
-        model = aiplatform.Model.upload(
+        # Upload new base model
+        return aiplatform.Model.upload(
             display_name=model_display_name,
             artifact_uri=model_repository,
-            version_aliases=["latest"],
             serving_container_image_uri=triton_container_image_uri,
             serving_container_predict_route="/v2/models/model/infer",
             serving_container_health_route="/v2/health/ready",
@@ -53,7 +72,6 @@ def get_or_upload_model(
                 f"--load-model={model_display_name}",
             ],
         )
-        return model
 
 
 def create_argparser():
@@ -70,7 +88,7 @@ def create_argparser():
     parser.add_argument(
         "--accelerator-type",
         required=False,
-        help="GCP accelerator type that is compatible with machine-type e.g. for g2-standard-4, NVIDIA_TESLA_L4",
+        help="GCP accelerator type that is compatible with machine-type e.g. for g2-standard-4, nvidia-l4",
     )
     parser.add_argument(
         "--accelerator-count",
@@ -106,10 +124,16 @@ def create_argparser():
         default="gs://gcs-bkt-model-repository",
     )
     parser.add_argument(
-        "--triton-container-image-uri",
+        "--triton-image-tag",
         required=False,
-        help="Path to NVIDIA Triton Server container image.",
-        default="us-east1-docker.pkg.dev/applied-ml-cloud-project/ar-cntrs-repo/tritonserver:25.03-py3",
+        default="24.12-py3",
+        help="(default: 24.12-py3",
+    )
+    parser.add_argument(
+        "--triton-artifact-registry",
+        required=False,
+        default="ar-cntrs-repo",
+        help="Artifact registry repository where the Triton Server container image is stored (default: ar-cntrs-repo",
     )
     parser.add_argument("--deploy", required=False, action="store_true", default=False)
     return parser
@@ -176,6 +200,14 @@ def main():
         spinner.write(
             f"> Getting or uploading model '{args.model_display_name}' to Vertex AI Model Registry (can take a few min)..."
         )
+        spinner.write(
+            f"> Triton Server Container 'tritonserver:{args.triton_image_tag}"
+        )
+        triton_container_image_uri = (
+            f"{deploy_config.region}-docker.pkg.dev/"
+            f"{deploy_config.project_id}/{args.triton_artifact_registry}/"
+            f"tritonserver:{args.triton_image_tag}"
+        )
         model = get_or_upload_model(
             deploy_config.project_id,
             deploy_config.region,
@@ -183,7 +215,7 @@ def main():
             args.triton_model_repository,
             args.vertex_model_id,
             args.vertex_model_version,
-            args.triton_container_image_uri,
+            triton_container_image_uri,
         )
         with spinner.hidden():
             print(
