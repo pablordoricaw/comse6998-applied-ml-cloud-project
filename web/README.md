@@ -1,4 +1,11 @@
-Make sure you have streamlit installed.
+# Install Streamlit
+There may be other Python libraries that may need to be installed.
+```bash
+pip install streamlit
+```
 
-**Run Server** <br>
-`streamlit run web_server.py`
+
+# Launch Web Server
+```bash
+streamlit run web_server.py
+```
